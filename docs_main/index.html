@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CypMail - Caixa de Entrada</title>
+    <link rel="stylesheet" href="/main_style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao CypMail, <span id="username"></span>!</h1>
+        <div class="inbox-controls">
+            <button id="refreshInbox">Atualizar Caixa de Entrada</button>
+            <button id="composeEmail">Escrever Email</button>
+            <button id="logoutButton">Sair</button>
+        </div>
+        <div class="email-list" id="emailList">
+            <!-- Emails will be loaded here -->
+        </div>
+
+        <!-- Compose Email Modal -->
+        <div id="composeModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Nova Mensagem</h2>
+                <form id="composeForm">
+                    <input type="email" id="composeTo" placeholder="Destinatário" required>
+                    <input type="text" id="composeSubject" placeholder="Assunto" required>
+                    <textarea id="composeBody" rows="10" placeholder="Corpo do e-mail" required></textarea>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/main_script.js"></script>
+</body>
+</html>

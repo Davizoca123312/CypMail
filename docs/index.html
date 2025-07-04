@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CypMail</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <!-- Formulário de Login -->
+        <div id="login-view">
+            <h2>Login - CypMail</h2>
+            <form id="login-form">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <p>Não tem uma conta? <a href="#" id="show-register">Cadastre-se</a></p>
+        </div>
+
+        <!-- Formulário de Cadastro -->
+        <div id="register-view" class="hidden">
+            <h2>Cadastro - CypMail</h2>
+            <form id="register-form">
+                <input type="email" name="email" placeholder="Email (será seu login)" required>
+                <input type="password" name="password" placeholder="Senha" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+            <p>Já tem uma conta? <a href="#" id="show-login">Faça o login</a></p>
+        </div>
+    </div>
+
+    <div id="inbox-container" class="hidden">
+        <header>
+            <div class="user-info">
+                <img src="https://via.placeholder.com/40" alt="Foto de Perfil" class="profile-pic">
+                <span id="user-email"></span>
+            </div>
+            <h1>Caixa de Entrada</h1>
+            <button id="compose-btn">Escrever</button>
+            <button id="logout-btn">Sair</button>
+        </header>
+        <main id="email-list">
+            <!-- Emails serão inseridos aqui -->
+        </main>
+    </div>
+
+    <!-- Formulário de Composição de Email -->
+    <div id="compose-email-container" class="hidden">
+        <h2>Escrever Novo Email</h2>
+        <form id="compose-form">
+            <input type="email" id="compose-to" name="to" placeholder="Para" required>
+            <input type="text" id="compose-subject" name="subject" placeholder="Assunto">
+            <textarea id="compose-body" name="body" placeholder="Corpo do email" rows="10"></textarea>
+            <button type="submit">Enviar</button>
+            <button type="button" id="cancel-compose">Cancelar</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
