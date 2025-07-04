@@ -9,10 +9,15 @@
 <body>
     <div class="container">
         <h1>Bem-vindo ao CypMail, <span id="username"></span>!</h1>
+        <div class="profile-section">
+            <img id="profilePic" src="" alt="Foto de Perfil" class="profile-pic">
+            <button id="changeProfilePicButton">Mudar Foto de Perfil</button>
+        </div>
         <div class="inbox-controls">
             <button id="refreshInbox">Atualizar Caixa de Entrada</button>
             <button id="composeEmail">Escrever Email</button>
             <button id="logoutButton">Sair</button>
+            <button id="themeToggleButton">Alternar Tema</button>
         </div>
         <div class="email-list" id="emailList">
             <!-- Emails will be loaded here -->
@@ -25,10 +30,21 @@
                 <h2>Nova Mensagem</h2>
                 <form id="composeForm">
                     <input type="email" id="composeTo" placeholder="Destinatário" required>
+                    <span id="recipientStatus" class="validation-message"></span>
                     <input type="text" id="composeSubject" placeholder="Assunto" required>
                     <textarea id="composeBody" rows="10" placeholder="Corpo do e-mail" required></textarea>
                     <button type="submit">Enviar</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Profile Picture Upload Modal -->
+        <div id="profilePicModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closeProfilePicModal">&times;</span>
+                <h2>Mudar Foto de Perfil</h2>
+                <input type="file" id="profilePicUpload" accept="image/*">
+                <button id="uploadProfilePicButton">Upload Foto</button>
             </div>
         </div>
     </div>

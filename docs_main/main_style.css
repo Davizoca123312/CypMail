@@ -1,129 +1,587 @@
+:root {
+    /* Light Mode */
+    --bg-color-light: #eef2f7;
+    --container-bg-light: #ffffff;
+    --text-color-light: #333;
+    --heading-color-light: #2c3e50;
+    --profile-section-bg-light: #f8f9fa;
+    --profile-section-border-light: #e0e6ed;
+    --button-primary-bg-light: #007bff;
+    --button-primary-hover-light: #0056b3;
+    --button-success-bg-light: #28a745;
+    --button-success-hover-light: #218838;
+    --email-item-bg-light: #fdfdfd;
+    --email-item-border-light: #e0e6ed;
+    --email-header-bg-light: #f0f4f8;
+    --email-header-hover-light: #e6eff7;
+    --email-header-strong-light: #0056b3;
+    --delete-button-bg-light: #dc3545;
+    --delete-button-hover-light: #c82333;
+    --email-body-bg-light: #ffffff;
+    --email-body-text-light: #555;
+    --modal-bg-light: #fefefe;
+    --modal-backdrop-light: rgba(0,0,0,0.6);
+    --input-border-light: #ced4da;
+}
+
+.dark-mode {
+    /* Dark Mode */
+    --bg-color-dark: #2c3e50;
+    --container-bg-dark: #34495e;
+    --text-color-dark: #ecf0f1;
+    --heading-color-dark: #ecf0f1;
+    --profile-section-bg-dark: #3b506b;
+    --profile-section-border-dark: #4a6280;
+    --button-primary-bg-dark: #3498db;
+    --button-primary-hover-dark: #2980b9;
+    --button-success-bg-dark: #27ae60;
+    --button-success-hover-dark: #229954;
+    --email-item-bg-dark: #3b506b;
+    --email-item-border-dark: #4a6280;
+    --email-header-bg-dark: #4a6280;
+    --email-header-hover-dark: #5a7494;
+    --email-header-strong-dark: #85c1e9;
+    --delete-button-bg-dark: #e74c3c;
+    --delete-button-hover-dark: #c0392b;
+    --email-body-bg-dark: #34495e;
+    --email-body-text-dark: #bdc3c7;
+    --modal-bg-dark: #3b506b;
+    --modal-backdrop-dark: rgba(0,0,0,0.8);
+    --input-border-dark: #4a6280;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+}
+
+.dark-mode {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
 }
 
 .container {
-    width: 80%;
+    width: 90%;
+    max-width: 1200px;
     margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-mode .container {
+    background-color: var(--container-bg-light);
+}
+
+.dark-mode .container {
+    background-color: var(--container-bg-dark);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 h1 {
-    color: #0056b3;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    transition: color 0.3s ease;
 }
 
-.inbox-controls button {
-    background-color: #007bff;
+.light-mode h1 {
+    color: var(--heading-color-light);
+}
+
+.dark-mode h1 {
+    color: var(--heading-color-dark);
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.light-mode .profile-section {
+    background-color: var(--profile-section-bg-light);
+    border-color: var(--profile-section-border-light);
+}
+
+.dark-mode .profile-section {
+    background-color: var(--profile-section-bg-dark);
+    border-color: var(--profile-section-border-dark);
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .profile-pic {
+    border-color: var(--button-primary-bg-light);
+}
+
+.dark-mode .profile-pic {
+    border-color: var(--button-primary-bg-dark);
+}
+
+.profile-section input[type="file"] {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode .profile-section input[type="file"] {
+    border-color: var(--input-border-light);
+    background-color: var(--container-bg-light);
+    color: var(--text-color-light);
+}
+
+.dark-mode .profile-section input[type="file"] {
+    border-color: var(--input-border-dark);
+    background-color: var(--profile-section-bg-dark);
+    color: var(--text-color-dark);
+}
+
+.profile-section button {
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 10px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
 }
 
-.inbox-controls button:hover {
-    background-color: #0056b3;
+.light-mode .profile-section button {
+    background-color: var(--button-primary-bg-light);
+}
+
+.light-mode .profile-section button:hover {
+    background-color: var(--button-primary-hover-light);
+}
+
+.dark-mode .profile-section button {
+    background-color: var(--button-primary-bg-dark);
+}
+
+.dark-mode .profile-section button:hover {
+    background-color: var(--button-primary-hover-dark);
+}
+
+/* Estilos específicos para o botão Mudar Foto de Perfil */
+#changeProfilePicButton {
+    margin-left: auto; /* Empurra o botão para a direita */
+    background-color: #6c757d !important; /* Cor neutra */
+}
+
+#changeProfilePicButton:hover {
+    background-color: #5a6268 !important;
+}
+
+.inbox-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.inbox-controls button {
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.light-mode .inbox-controls button {
+    background-color: var(--button-success-bg-light);
+}
+
+.light-mode .inbox-controls button:hover {
+    background-color: var(--button-success-hover-light);
+}
+
+.dark-mode .inbox-controls button {
+    background-color: var(--button-success-bg-dark);
+}
+
+.dark-mode .inbox-controls button:hover {
+    background-color: var(--button-success-hover-dark);
+}
+
+#themeToggleButton {
+    background-color: #6c757d !important; /* Cor neutra para o botão de tema */
+}
+
+#themeToggleButton:hover {
+    background-color: #5a6268 !important;
 }
 
 .email-list {
     margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
+    border-top: 1px solid;
+    padding-top: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.light-mode .email-list {
+    border-color: var(--email-item-border-light);
+}
+
+.dark-mode .email-list {
+    border-color: var(--email-item-border-dark);
 }
 
 .email-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    overflow: hidden; /* Garante que o conteúdo interno não ultrapasse as bordas arredondadas */
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid;
+}
+
+.light-mode .email-item {
+    background-color: var(--email-item-bg-light);
+    border-color: var(--email-item-border-light);
+}
+
+.dark-mode .email-item {
+    background-color: var(--email-item-bg-dark);
+    border-color: var(--email-item-border-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.email-item:hover {
+    transform: translateY(-3px);
+}
+
+.light-mode .email-item:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .email-item:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .email-header {
-    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
     cursor: pointer;
-    background-color: #f0f8ff;
-    transition: background-color 0.2s;
+    border-bottom: 1px solid;
+    transition: background-color 0.2s, border-color 0.3s ease;
 }
 
-.email-header:hover {
-    background-color: #e6f2ff;
+.light-mode .email-header {
+    background-color: var(--email-header-bg-light);
+    border-color: var(--email-item-border-light);
+}
+
+.light-mode .email-header:hover {
+    background-color: var(--email-header-hover-light);
+}
+
+.dark-mode .email-header {
+    background-color: var(--email-header-bg-dark);
+    border-color: var(--email-item-border-dark);
+}
+
+.dark-mode .email-header:hover {
+    background-color: var(--email-header-hover-dark);
 }
 
 .email-header strong {
-    color: #0056b3;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.light-mode .email-header strong {
+    color: var(--email-header-strong-light);
+}
+
+.dark-mode .email-header strong {
+    color: var(--email-header-strong-dark);
+}
+
+.sender-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sender-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid;
+}
+
+.light-mode .sender-profile-pic {
+    border-color: var(--button-primary-bg-light);
+}
+
+.dark-mode .sender-profile-pic {
+    border-color: var(--button-primary-bg-dark);
+}
+
+.delete-email-button {
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.light-mode .delete-email-button {
+    background-color: var(--delete-button-bg-light);
+}
+
+.light-mode .delete-email-button:hover {
+    background-color: var(--delete-button-hover-light);
+}
+
+.dark-mode .delete-email-button {
+    background-color: var(--delete-button-bg-dark);
+}
+
+.dark-mode .delete-email-button:hover {
+    background-color: var(--delete-button-hover-dark);
 }
 
 .email-body {
-    padding: 15px;
-    border-top: 1px solid #ddd;
-    background-color: #ffffff;
+    padding: 20px;
+    border-top: 1px solid;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.light-mode .email-body {
+    background-color: var(--email-body-bg-light);
+    color: var(--email-body-text-light);
+    border-color: var(--email-item-border-light);
+}
+
+.dark-mode .email-body {
+    background-color: var(--email-body-bg-dark);
+    color: var(--email-body-text-dark);
+    border-color: var(--email-item-border-dark);
 }
 
 .email-body pre {
-    white-space: pre-wrap; /* Quebra a linha no texto do corpo */
+    white-space: pre-wrap;
     word-wrap: break-word;
     margin: 0;
-    font-family: inherit; /* Herda a fonte do corpo */
+    font-family: inherit;
 }
-
 
 /* Modal Styles */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding-top: 60px;
+    transition: background-color 0.3s ease;
+}
+
+.light-mode .modal {
+    background-color: var(--modal-backdrop-light);
+}
+
+.dark-mode .modal {
+    background-color: var(--modal-backdrop-dark);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 500px;
-    border-radius: 8px;
+    margin: 5% auto;
+    padding: 30px;
+    border: none;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-mode .modal-content {
+    background-color: var(--modal-bg-light);
+}
+
+.dark-mode .modal-content {
+    background-color: var(--modal-bg-dark);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .close-button {
-    color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    transition: color 0.3s ease;
 }
 
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.light-mode .close-button {
+    color: #aaa;
+}
+
+.light-mode .close-button:hover,
+.light-mode .close-button:focus {
+    color: #333;
+}
+
+.dark-mode .close-button {
+    color: #bdc3c7;
+}
+
+.dark-mode .close-button:hover,
+.dark-mode .close-button:focus {
+    color: #ecf0f1;
+}
+
+#composeForm h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.light-mode #composeForm h2 {
+    color: var(--heading-color-light);
+}
+
+.dark-mode #composeForm h2 {
+    color: var(--heading-color-dark);
 }
 
 #composeForm input, #composeForm textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode #composeForm input,
+.light-mode #composeForm textarea {
+    border-color: var(--input-border-light);
+    background-color: var(--container-bg-light);
+    color: var(--text-color-light);
+}
+
+.dark-mode #composeForm input,
+.dark-mode #composeForm textarea {
+    border-color: var(--input-border-dark);
+    background-color: var(--profile-section-bg-dark);
+    color: var(--text-color-dark);
+}
+
+#composeForm textarea {
+    resize: vertical;
+    min-height: 120px;
 }
 
 #composeForm button {
-    background-color: #28a745;
     color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.light-mode #composeForm button {
+    background-color: var(--button-primary-bg-light);
+}
+
+.light-mode #composeForm button:hover {
+    background-color: var(--button-primary-hover-light);
+}
+
+.dark-mode #composeForm button {
+    background-color: var(--button-primary-bg-dark);
+}
+
+.dark-mode #composeForm button:hover {
+    background-color: var(--button-primary-hover-dark);
+}
+
+.validation-message {
+    font-size: 0.85em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .inbox-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inbox-controls button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-section input[type="file"] {
+        width: 100%;
+    }
+
+    .profile-section button {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
 }

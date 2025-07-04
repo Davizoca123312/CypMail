@@ -2,6 +2,7 @@ import os
 import json
 import re
 from email import message_from_string
+from email.utils import parseaddr
 
 def get_username_from_email(email):
     return email.split('@')[0]
@@ -25,7 +26,8 @@ def parse_email_content(email_content):
         body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
 
     return {
-        'from': msg.get('From', 'Desconhecido'),
+        'from_display': msg.get('From', 'Desconhecido'),
+        'from_email': parseaddr(msg.get('From', ''))[1], # Extrai apenas o endereço de email
         'subject': msg.get('Subject', 'Sem Assunto'),
         'body': body.strip()
     }
@@ -54,7 +56,8 @@ def list_emails_json(user_email, mailbox_dir):
             email_details = parse_email_content(email_content)
             emails_data.append({
                 'id': os.path.basename(filepath),
-                'from': email_details['from'],
+                'from_display': email_details['from_display'],
+                'from_email': email_details['from_email'],
                 'subject': email_details['subject'],
                 'body': email_details['body']
             })
