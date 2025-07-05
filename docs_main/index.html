@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CypMail - Caixa de Entrada</title>
+    <title data-i18n="main_title"></title>
     <link rel="stylesheet" href="/main_style.css">
 </head>
 <body>
+    <div class="language-switcher">
+        <button id="language-toggle-button" class="language-toggle-button">🌐</button>
+        <div id="language-options" class="language-options hidden">
+            <button class="lang-option" data-lang="pt">Português</button>
+            <button class="lang-option" data-lang="en">English</button>
+            <button class="lang-option" data-lang="es">Español</button>
+        </div>
+    </div>
     <div class="container">
-        <h1>Bem-vindo ao CypMail, <span id="username"></span>!</h1>
+        <h1 data-i18n="welcome_message_prefix"></h1><span id="username"></span>!
         <div class="profile-section">
             <img id="profilePic" src="" alt="Foto de Perfil" class="profile-pic">
-            <button id="changeProfilePicButton">Mudar Foto de Perfil</button>
+            <button id="changeProfilePicButton" data-i18n="change_profile_pic_button"></button>
         </div>
         <div class="inbox-controls">
-            <button id="refreshInbox">Atualizar Caixa de Entrada</button>
-            <button id="composeEmail">Escrever Email</button>
-            <button id="logoutButton">Sair</button>
-            <button id="themeToggleButton">Alternar Tema</button>
+            <button id="refreshInbox" data-i18n="refresh_inbox_button"></button>
+            <button id="composeEmail" data-i18n="compose_email_button"></button>
+            <button id="logoutButton" data-i18n="logout_button"></button>
+            <button id="themeToggleButton" data-i18n="toggle_theme_button"></button>
         </div>
+        <nav class="main-nav">
+            <ul>
+                <li class="tab-item active" id="inboxTab" data-i18n="tab_inbox"></li>
+                <li class="tab-item" id="starredTab" data-i18n="tab_starred"></li>
+                <li class="tab-item" id="postponedTab" data-i18n="tab_postponed"></li>
+                <li class="tab-item" id="sentTab" data-i18n="tab_sent"></li>
+                <li class="tab-item" id="draftsTab" data-i18n="tab_drafts"></li>
+                <li class="tab-item" id="importantTab" data-i18n="tab_important"></li>
+                <li class="tab-item" id="chatsTab" data-i18n="tab_chats"></li>
+                <li class="tab-item" id="scheduledTab" data-i18n="tab_scheduled"></li>
+                <li class="tab-item" id="allMailTab" data-i18n="tab_all_mail"></li>
+                <li class="tab-item" id="spamTab" data-i18n="tab_spam"></li>
+                <li class="tab-item" id="trashTab" data-i18n="tab_trash"></li>
+            </ul>
+        </nav>
         <div class="email-list" id="emailList">
             <!-- Emails will be loaded here -->
         </div>
@@ -27,13 +50,13 @@
         <div id="composeModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <h2>Nova Mensagem</h2>
+                <h2 data-i18n="new_message_title"></h2>
                 <form id="composeForm">
-                    <input type="email" id="composeTo" placeholder="Destinatário" required>
+                    <input type="email" id="composeTo" data-i18n-placeholder="recipient_placeholder" required>
                     <span id="recipientStatus" class="validation-message"></span>
-                    <input type="text" id="composeSubject" placeholder="Assunto" required>
-                    <textarea id="composeBody" rows="10" placeholder="Corpo do e-mail" required></textarea>
-                    <button type="submit">Enviar</button>
+                    <input type="text" id="composeSubject" data-i18n-placeholder="subject_placeholder" required>
+                    <textarea id="composeBody" rows="10" data-i18n-placeholder="body_placeholder" required></textarea>
+                    <button type="submit" data-i18n="send_button"></button>
                 </form>
             </div>
         </div>
@@ -42,9 +65,9 @@
         <div id="profilePicModal" class="modal">
             <div class="modal-content">
                 <span class="close-button" id="closeProfilePicModal">&times;</span>
-                <h2>Mudar Foto de Perfil</h2>
+                <h2 data-i18n="change_profile_pic_modal_title"></h2>
                 <input type="file" id="profilePicUpload" accept="image/*">
-                <button id="uploadProfilePicButton">Upload Foto</button>
+                <button id="uploadProfilePicButton" data-i18n="upload_photo_button"></button>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, redirect, url_for
+from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import os
 import datetime
@@ -14,6 +14,7 @@ HTTP_PORT = 8080
 DB_FILE = 'users.db'
 MAILBOX_DIR = 'mailboxes'
 PROFILE_PICS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'profile_pics')
+app.secret_key = 'sua_chave_secreta_muito_segura_aqui' # Mude isso para uma chave real e complexa
 
 # --- Mapeamento de usuários para SIDs do Socket.IO ---
 user_sids = {}
@@ -128,21 +129,23 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     if check_credentials(email, password):
-        return redirect(url_for('user_main', user_email=email))
+        session['user_email'] = email # Mantém na sessão para outras rotas
+        return redirect(url_for('user_main', user_email=email)) # Redireciona para a URL com email
     else:
         return "Email ou senha inválidos.", 401
 
 @app.route('/upload_profile_pic', methods=['POST'])
 def upload_profile_pic():
+    if 'user_email' not in session:
+        return "Não autorizado.", 401
+    user_email = session['user_email']
+
     if 'file' not in request.files:
         return "Nenhum arquivo enviado.", 400
     file = request.files['file']
-    user_email = request.form.get('user_email')
 
     if file.filename == '':
         return "Nenhum arquivo selecionado.", 400
-    if not user_email:
-        return "Email do usuário não fornecido.", 400
 
     if file:
         filename = secure_filename(user_email.split('@')[0] + '.png') # Assume PNG para simplificar
@@ -154,35 +157,42 @@ def upload_profile_pic():
         return "Foto de perfil enviada com sucesso!", 200
     return "Erro ao enviar foto de perfil.", 500
 
-@app.route('/api/inbox')
-def inbox():
-    # O email do usuário agora é passado como um argumento de consulta
-    user_email = request.args.get('user_email')
-    if user_email:
-        inbox_json = list_emails_json(user_email, MAILBOX_DIR)
-        emails_data = json.loads(inbox_json)
+@app.route('/api/emails')
+def get_emails():
+    if 'user_email' not in session:
+        return "Não autorizado.", 401
+    user_email = session['user_email']
 
-        for email_item in emails_data:
-            sender_username = email_item['from_email'].split('@')[0]
-            profile_pic_filename = f"{sender_username}.png"
-            profile_pic_path = os.path.join(PROFILE_PICS_DIR, profile_pic_filename)
-            
-            # Verifica se o arquivo da foto de perfil existe
-            if os.path.exists(profile_pic_path):
-                email_item['sender_profile_pic'] = url_for('get_profile_pic', filename=profile_pic_filename)
-            else:
-                email_item['sender_profile_pic'] = 'https://via.placeholder.com/50' # Imagem padrão
+    tab_type = request.args.get('tab', 'inbox') # Default to inbox
 
-        return jsonify(emails_data), 200, {'Content-Type': 'application/json'}
-    else:
-        return "Email do usuário não fornecido.", 400
+    inbox_json = list_emails_json(user_email, MAILBOX_DIR, tab_type)
+    emails_data = json.loads(inbox_json)
+
+    for email_item in emails_data:
+        sender_username = email_item['from_email'].split('@')[0]
+        profile_pic_filename = f"{sender_username}.png"
+        profile_pic_path = os.path.join(PROFILE_PICS_DIR, profile_pic_filename)
+        
+        profile_pic_url = ''
+        if os.path.exists(profile_pic_path):
+            profile_pic_url = url_for('get_profile_pic', filename=profile_pic_filename)
+        else:
+            profile_pic_url = 'https://via.placeholder.com/50' # Imagem padrão
+
+        email_item['sender_profile_pic'] = profile_pic_url
+
+    return jsonify(emails_data), 200, {'Content-Type': 'application/json'}
 
 @app.route('/profile_pics/<filename>')
 def get_profile_pic(filename):
     return send_from_directory(PROFILE_PICS_DIR, filename)
 
-@app.route('/delete_email/<user_email>/<email_id>', methods=['DELETE'])
-def delete_email(user_email, email_id):
+@app.route('/delete_email/<email_id>', methods=['DELETE'])
+def delete_email(email_id):
+    if 'user_email' not in session:
+        return "Não autorizado.", 401
+    user_email = session['user_email']
+
     if delete_email_from_mailbox(user_email, email_id):
         return "Email excluído com sucesso!", 200
     else:
@@ -194,6 +204,18 @@ def check_user_exists_route(email):
         return jsonify({'exists': True}), 200
     else:
         return jsonify({'exists': False}), 200
+
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    return redirect(url_for('index'))
+
+@app.route('/get_current_user')
+def get_current_user():
+    if 'user_email' in session:
+        return jsonify({'email': session['user_email']}), 200
+    else:
+        return jsonify({'email': None}), 401
 
 # --- Eventos Socket.IO ---
 @socketio.on('connect')
@@ -258,6 +280,14 @@ def style():
 @app.route('/script.js')
 def script():
     return send_from_directory('docs', 'script.js')
+
+@app.route('/languages/<lang_code>.json')
+def serve_language_file(lang_code):
+    return send_from_directory('docs/languages', f'{lang_code}.json')
+
+@app.route('/docs_main/languages/<lang_code>.json')
+def serve_main_language_file(lang_code):
+    return send_from_directory('docs_main/languages', f'{lang_code}.json')
 
 if __name__ == '__main__':
     if not os.path.exists(MAILBOX_DIR):

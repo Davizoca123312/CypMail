@@ -7,27 +7,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="language-switcher">
+        <button id="language-toggle-button" class="language-toggle-button">🌐</button>
+        <div id="language-options" class="language-options hidden">
+            <button class="lang-option" data-lang="pt">Português</button>
+            <button class="lang-option" data-lang="en">English</button>
+            <button class="lang-option" data-lang="es">Español</button>
+        </div>
+    </div>
     <div class="form-container">
         <!-- Formulário de Login -->
         <div id="login-view">
-            <h2>Login - CypMail</h2>
+            <h2 data-i18n="login_title"></h2>
             <form id="login-form">
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <button type="submit">Entrar</button>
+                <input type="email" name="email" data-i18n-placeholder="email_label" required>
+                <input type="password" name="password" data-i18n-placeholder="password_label" required>
+                <button type="submit" data-i18n="login_button"></button>
             </form>
-            <p>Não tem uma conta? <a href="#" id="show-register">Cadastre-se</a></p>
+            <p><span data-i18n="no_account_prompt"></span> <a href="#" id="show-register" data-i18n="register_button"></a></p>
         </div>
 
         <!-- Formulário de Cadastro -->
         <div id="register-view" class="hidden">
-            <h2>Cadastro - CypMail</h2>
+            <h2 data-i18n="register_modal_title"></h2>
             <form id="register-form">
-                <input type="email" name="email" placeholder="Email (será seu login)" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <button type="submit">Cadastrar</button>
+                <input type="email" name="email" data-i18n-placeholder="email_label" required>
+                <input type="password" name="password" data-i18n-placeholder="password_label" required>
+                <input type="password" name="confirm_password" data-i18n-placeholder="confirm_password_label" required>
+                <button type="submit" data-i18n="register_button"></button>
             </form>
-            <p>Já tem uma conta? <a href="#" id="show-login">Faça o login</a></p>
+            <p><span data-i18n="already_have_account_prompt"></span> <a href="#" id="show-login" data-i18n="login_button"></a></p>
         </div>
     </div>
 
@@ -37,9 +46,9 @@
                 <img src="https://via.placeholder.com/40" alt="Foto de Perfil" class="profile-pic">
                 <span id="user-email"></span>
             </div>
-            <h1>Caixa de Entrada</h1>
-            <button id="compose-btn">Escrever</button>
-            <button id="logout-btn">Sair</button>
+            <h1 data-i18n="main_title"></h1>
+            <button id="compose-btn" data-i18n="compose_email_button"></button>
+            <button id="logout-btn" onclick="window.location.href='/logout'" data-i18n="logout_button"></button>
         </header>
         <main id="email-list">
             <!-- Emails serão inseridos aqui -->
@@ -48,13 +57,13 @@
 
     <!-- Formulário de Composição de Email -->
     <div id="compose-email-container" class="hidden">
-        <h2>Escrever Novo Email</h2>
+        <h2 data-i18n="new_message_title"></h2>
         <form id="compose-form">
-            <input type="email" id="compose-to" name="to" placeholder="Para" required>
-            <input type="text" id="compose-subject" name="subject" placeholder="Assunto">
-            <textarea id="compose-body" name="body" placeholder="Corpo do email" rows="10"></textarea>
-            <button type="submit">Enviar</button>
-            <button type="button" id="cancel-compose">Cancelar</button>
+            <input type="email" id="compose-to" name="to" data-i18n-placeholder="recipient_placeholder" required>
+            <input type="text" id="compose-subject" name="subject" data-i18n-placeholder="subject_placeholder">
+            <textarea id="compose-body" name="body" data-i18n-placeholder="body_placeholder" rows="10"></textarea>
+            <button type="submit" data-i18n="send_button"></button>
+            <button type="button" id="cancel-compose" data-i18n="cancel_button"></button>
         </form>
     </div>
 

@@ -32,7 +32,7 @@ def parse_email_content(email_content):
         'body': body.strip()
     }
 
-def list_emails_json(user_email, mailbox_dir):
+def list_emails_json(user_email, mailbox_dir, tab_type='inbox'):
     username = get_username_from_email(user_email)
     mailbox_path = os.path.join(mailbox_dir, username)
     emails_data = []
@@ -54,6 +54,20 @@ def list_emails_json(user_email, mailbox_dir):
         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
             email_content = f.read()
             email_details = parse_email_content(email_content)
+            
+            # Filtering logic based on tab_type
+            if tab_type == 'inbox' or tab_type == 'allMail':
+                # Inbox and All Mail show all emails for now
+                pass
+            elif tab_type == 'sent':
+                # Only show emails sent by the current user
+                if email_details['from_email'] != user_email:
+                    continue # Skip this email if it's not sent by the user
+            # For other tabs (starred, postponed, drafts, important, chats, scheduled, spam, trash),
+            # for now, we'll just show all emails.
+            # In a real application, these would require additional metadata on the emails
+            # (e.g., a flag in the .eml file or a separate database)
+
             emails_data.append({
                 'id': os.path.basename(filepath),
                 'from_display': email_details['from_display'],

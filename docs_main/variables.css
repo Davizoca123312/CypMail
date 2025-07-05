@@ -1,0 +1,61 @@
+:root {
+    /* Light Mode */
+    --bg-color-light: #eef2f7;
+    --container-bg-light: #ffffff;
+    --text-color-light: #333;
+    --heading-color-light: #2c3e50;
+    --profile-section-bg-light: #f8f9fa;
+    --profile-section-border-light: #e0e6ed;
+    --button-primary-bg-light: #007bff;
+    --button-primary-hover-light: #0056b3;
+    --button-success-bg-light: #28a745;
+    --button-success-hover-light: #218838;
+    --email-item-bg-light: #fdfdfd;
+    --email-item-border-light: #e0e6ed;
+    --email-header-bg-light: #f0f4f8;
+    --email-header-hover-light: #e6eff7;
+    --email-header-strong-light: #0056b3;
+    --delete-button-bg-light: #dc3545;
+    --delete-button-hover-light: #c82333;
+    --email-body-bg-light: #ffffff;
+    --email-body-text-light: #555;
+    --modal-bg-light: #fefefe;
+    --modal-backdrop-light: rgba(0,0,0,0.6);
+    --input-border-light: #ced4da;
+}
+
+.dark-mode {
+    /* Dark Mode */
+    --bg-color-dark: #2c3e50;
+    --container-bg-dark: #34495e;
+    --text-color-dark: #ecf0f1;
+    --heading-color-dark: #ecf0f1;
+    --profile-section-bg-dark: #3b506b;
+    --profile-section-border-dark: #4a6280;
+    --button-primary-bg-dark: #3498db;
+    --button-primary-hover-dark: #2980b9;
+    --button-success-bg-dark: #27ae60;
+    --button-success-hover-dark: #229954;
+    --email-item-bg-dark: #3b506b;
+    --email-item-border-dark: #4a6280;
+    --email-header-bg-dark: #4a6280;
+    --email-header-hover-dark: #5a7494;
+    --email-header-strong-dark: #85c1e9;
+    --delete-button-bg-dark: #e74c3c;
+    --delete-button-hover-dark: #c0392b;
+    --email-body-bg-dark: #34495e;
+    --email-body-text-dark: #bdc3c7;
+    --modal-bg-dark: #3b506b;
+    --modal-backdrop-dark: rgba(0,0,0,0.8);
+    --input-border-dark: #4a6280;
+}
+
+.light-mode {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+}
+
+.dark-mode {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+}

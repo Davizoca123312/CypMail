@@ -1,6 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const usernameSpan = document.getElementById('username');
     const emailList = document.getElementById('emailList');
+    const tabs = document.querySelectorAll('.tab-item');
+
+    let currentTab = 'inbox'; // Default tab
+
+    // --- Tab Switching Logic ---
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(item => item.classList.remove('active'));
+            tab.classList.add('active');
+            currentTab = tab.id.replace('Tab', ''); // e.g., 'inboxTab' -> 'inbox'
+            fetchEmails(currentTab);
+        });
+    });
     const refreshInboxButton = document.getElementById('refreshInbox');
     const composeEmailButton = document.getElementById('composeEmail');
     const logoutButton = document.getElementById('logoutButton');
@@ -18,6 +31,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const composeForm = document.getElementById('composeForm');
     const composeToInput = document.getElementById('composeTo');
     const recipientStatusSpan = document.getElementById('recipientStatus');
+
+    const languageToggleButton = document.getElementById('language-toggle-button');
+    const languageOptionsDiv = document.getElementById('language-options');
+    const langOptionButtons = document.querySelectorAll('.lang-option');
+
+    let translations = {};
+
+    // Function to load translations
+    async function loadTranslations(lang) {
+        try {
+            const response = await fetch(`/docs_main/languages/${lang}.json`);
+            translations = await response.json();
+            applyTranslations();
+            localStorage.setItem('selectedLanguage', lang);
+        } catch (error) {
+            console.error('Error loading translations:', error);
+        }
+    }
+
+    // Function to apply translations
+    function applyTranslations() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                element.textContent = translations[key];
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (translations[key]) {
+                element.placeholder = translations[key];
+            }
+        });
+        // Update specific elements not covered by data-i18n
+        if (usernameSpan.textContent) {
+            usernameSpan.textContent = usernameSpan.textContent; // Keep username as is
+        }
+        // Update tab texts
+        document.getElementById('inboxTab').textContent = translations.tab_inbox;
+        document.getElementById('starredTab').textContent = translations.tab_starred;
+        document.getElementById('postponedTab').textContent = translations.tab_postponed;
+        document.getElementById('sentTab').textContent = translations.tab_sent;
+        document.getElementById('draftsTab').textContent = translations.tab_drafts;
+        document.getElementById('importantTab').textContent = translations.tab_important;
+        document.getElementById('chatsTab').textContent = translations.tab_chats;
+        document.getElementById('scheduledTab').textContent = translations.tab_scheduled;
+        document.getElementById('allMailTab').textContent = translations.tab_all_mail;
+        document.getElementById('spamTab').textContent = translations.tab_spam;
+        document.getElementById('trashTab').textContent = translations.tab_trash;
+
+        // Update welcome message separately as it has a dynamic part
+        document.querySelector('h1').innerHTML = `${translations.welcome_message_prefix} <span id="username">${usernameSpan.textContent}</span>!`;
+    }
+
+    // Set initial language
+    const initialLang = localStorage.getItem('selectedLanguage') || 'pt';
+    loadTranslations(initialLang);
+
+    // Language toggle button event
+    languageToggleButton.addEventListener('click', () => {
+        languageOptionsDiv.classList.toggle('hidden');
+    });
+
+    // Language option buttons event
+    langOptionButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const lang = event.target.dataset.lang;
+            loadTranslations(lang);
+            languageOptionsDiv.classList.add('hidden'); // Hide options after selection
+        });
+    });
+
+    // Hide language options if clicked outside
+    window.addEventListener('click', (event) => {
+        if (!languageOptionsDiv.contains(event.target) && !languageToggleButton.contains(event.target)) {
+            languageOptionsDiv.classList.add('hidden');
+        }
+    });
 
     // --- Conexão WebSocket ---
     const socket = io();
@@ -43,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadProfilePicButton.addEventListener('click', async () => {
             const file = profilePicInput.files[0];
             if (!file) {
-                alert('Por favor, selecione um arquivo para upload.');
+                alert(translations.select_file_for_upload);
                 return;
             }
 
@@ -57,15 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: formData,
                 });
                 if (response.ok) {
-                    alert('Foto de perfil enviada com sucesso!');
+                    alert(translations.profile_pic_upload_success);
                     loadProfilePic(); // Recarrega a imagem após o upload
                     profilePicModal.style.display = 'none'; // Fecha o modal após o upload
                 } else {
-                    alert('Erro ao enviar foto de perfil.');
+                    alert(translations.profile_pic_upload_error);
                 }
             } catch (error) {
                 console.error('Erro ao enviar foto de perfil:', error);
-                alert('Erro de conexão ao enviar foto de perfil.');
+                alert(translations.profile_pic_connection_error);
             }
         });
 
@@ -112,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     uploadProfilePicButton.addEventListener('click', async () => {
         const file = profilePicInput.files[0];
         if (!file) {
-            alert('Por favor, selecione um arquivo para upload.');
+            alert(translations.select_file_for_upload);
             return;
         }
 
@@ -126,28 +217,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData,
             });
             if (response.ok) {
-                alert('Foto de perfil enviada com sucesso!');
+                alert(translations.profile_pic_upload_success);
                 loadProfilePic(); // Recarrega a imagem após o upload
                 profilePicModal.style.display = 'none'; // Fecha o modal após o upload
             } else {
-                alert('Erro ao enviar foto de perfil.');
+                alert(translations.profile_pic_upload_error);
             }
         } catch (error) {
             console.error('Erro ao enviar foto de perfil:', error);
-            alert('Erro de conexão ao enviar foto de perfil.');
+            alert(translations.profile_pic_connection_error);
         }
     });
 
     // Função para buscar e exibir emails via API REST
-    const fetchEmails = async () => {
+    const fetchEmails = async (tabType = 'inbox') => {
         try {
-            // Passa o email do usuário como parâmetro de consulta
-            const response = await fetch(`/api/inbox?user_email=${encodeURIComponent(userEmail)}`);
+            // Passa o email do usuário e o tipo de aba como parâmetro de consulta
+            const response = await fetch(`/api/emails?user_email=${encodeURIComponent(userEmail)}&tab=${tabType}`);
             if (response.ok) {
                 const emails = await response.json();
                 emailList.innerHTML = ''; // Limpa a lista atual
                 if (emails.length === 0) {
-                    emailList.innerHTML = '<p>Sua caixa de entrada está vazia.</p>';
+                    emailList.innerHTML = `<p>${translations.inbox_empty}</p>`;
                     return;
                 }
                 emails.forEach(email => {
@@ -168,8 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const senderText = document.createElement('div');
                     senderText.innerHTML = `
-                        <strong>De:</strong> ${email.from_display}<br>
-                        <strong>Assunto:</strong> ${email.subject}
+                        <strong>${translations.from_prefix}</strong> ${email.from_display}<br>
+                        <strong>${translations.subject_prefix}</strong> ${email.subject}
                     `;
 
                     senderInfo.appendChild(senderPic);
@@ -178,23 +269,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const deleteButton = document.createElement('button');
                     deleteButton.classList.add('delete-email-button');
-                    deleteButton.textContent = 'Excluir';
+                    deleteButton.textContent = translations.delete_button;
                     deleteButton.addEventListener('click', async (e) => {
                         e.stopPropagation(); // Impede que o clique no botão expanda/recolha o email
-                        if (confirm('Tem certeza que deseja excluir este e-mail?')) {
+                        if (confirm(translations.confirm_delete_email)) {
                             try {
-                                const response = await fetch(`/delete_email/${userEmail}/${email.id}`, {
+                                const response = await fetch(`/delete_email/${email.id}`, {
                                     method: 'DELETE',
                                 });
                                 if (response.ok) {
-                                    alert('Email excluído com sucesso!');
+                                    alert(translations.email_deleted_success);
                                     fetchEmails(); // Atualiza a caixa de entrada
                                 } else {
-                                    alert('Erro ao excluir email.');
+                                    alert(translations.email_delete_error);
                                 }
                             } catch (error) {
                                 console.error('Erro ao excluir email:', error);
-                                alert('Erro de conexão ao excluir email.');
+                                alert(translations.email_delete_connection_error);
                             }
                         }
                     });
@@ -217,18 +308,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     emailList.appendChild(emailItem);
                 });
             } else {
-                emailList.innerHTML = '<p>Erro ao carregar e-mails.</p>';
+                emailList.innerHTML = `<p>${translations.error_loading_emails}</p>`;
             }
         } catch (error) {
             console.error('Erro ao buscar e-mails:', error);
-            emailList.innerHTML = '<p>Erro de conexão ao carregar e-mails.</p>';
+            emailList.innerHTML = `<p>${translations.connection_error_loading_emails}</p>`;
         }
     };
 
     // --- Event Listeners ---
 
     // Atualizar Caixa de Entrada
-    refreshInboxButton.addEventListener('click', fetchEmails);
+    refreshInboxButton.addEventListener('click', () => fetchEmails(currentTab));
 
     // Abrir Modal de Composição
     composeEmailButton.addEventListener('click', () => {
@@ -256,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validação final antes de enviar
         if (!to.endsWith("@cypmail.com")) {
-            recipientStatusSpan.textContent = "Email deve ser @cypmail.com";
+            recipientStatusSpan.textContent = translations.email_must_be_cypmail;
             recipientStatusSpan.style.color = 'red';
             return;
         }
@@ -265,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
 
         if (!data.exists) {
-            recipientStatusSpan.textContent = "Usuário não existe!";
+            recipientStatusSpan.textContent = translations.user_does_not_exist;
             recipientStatusSpan.style.color = 'red';
             return;
         }
@@ -291,14 +382,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await fetch(`/check_user_exists/${encodeURIComponent(email)}`);
                     const data = await response.json();
                     if (data.exists) {
-                        recipientStatusSpan.textContent = "Usuário existe.";
+                        recipientStatusSpan.textContent = translations.user_exists;
                         recipientStatusSpan.style.color = 'green';
                     } else {
-                        recipientStatusSpan.textContent = "Usuário não existe!";
+                        recipientStatusSpan.textContent = translations.user_does_not_exist;
                         recipientStatusSpan.style.color = 'red';
                     }
                 } else {
-                    recipientStatusSpan.textContent = "Email deve ser @cypmail.com";
+                    recipientStatusSpan.textContent = translations.email_must_be_cypmail;
                     recipientStatusSpan.style.color = 'orange';
                 }
             }, doneTypingInterval);
@@ -316,11 +407,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Lidar com a resposta do envio de email
     socket.on('send_email_response', (response) => {
-        // alert(response.message); // Removido o popup
+        alert(response.message); // Keep alert for now, can be replaced by a toast notification
         if (response.status === 'success') {
             composeModal.style.display = 'none';
             composeForm.reset();
-            fetchEmails(); // Atualiza a caixa de entrada
+            fetchEmails(currentTab); // Atualiza a caixa de entrada
         }
     });
 
@@ -328,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('new_email', (data) => {
         console.log('Novo email recebido:', data);
         // alert(`Novo email de: ${data.from}\nAssunto: ${data.subject}`); // Removido o popup
-        fetchEmails(); // Atualiza a caixa de entrada para mostrar o novo email
+        fetchEmails(currentTab); // Atualiza a caixa de entrada para mostrar o novo email
     });
 
     socket.on('connect', () => {
@@ -340,5 +431,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Carregamento inicial
-    fetchEmails();
+    fetchEmails(currentTab);
 });

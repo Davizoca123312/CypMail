@@ -1,0 +1,22 @@
+{
+    "login_title": "CypMail - Login",
+    "welcome_message": "Welcome to CypMail",
+    "email_label": "Email:",
+    "password_label": "Password:",
+    "login_button": "Login",
+    "no_account_prompt": "Don't have an account? Register",
+    "register_modal_title": "Register",
+    "confirm_password_label": "Confirm Password:",
+    "register_button": "Register",
+    "registration_error_prefix": "Registration error:",
+    "login_error_prefix": "Login error:",
+    "fill_all_fields": "Please fill in all fields.",
+    "passwords_do_not_match": "Passwords do not match.",
+    "email_must_be_cypmail": "Email must be @cypmail.com",
+    "password_min_length": "Password must be at least 8 characters long.",
+    "registration_success": "Registration successful! Please log in.",
+    "registration_error": "Registration error.",
+    "invalid_credentials": "Invalid email or password.",
+    "login_error": "Login error.",
+    "connection_error": "Connection error."
+}

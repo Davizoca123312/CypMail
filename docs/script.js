@@ -17,6 +17,65 @@ document.addEventListener('DOMContentLoaded', () => {
     const userEmailSpan = document.getElementById('user-email');
     const emailListDiv = document.getElementById('email-list');
 
+    const languageToggleButton = document.getElementById('language-toggle-button');
+    const languageOptionsDiv = document.getElementById('language-options');
+    const langOptionButtons = document.querySelectorAll('.lang-option');
+
+    let translations = {};
+
+    // Function to load translations
+    async function loadTranslations(lang) {
+        try {
+            const response = await fetch(`/languages/${lang}.json`);
+            translations = await response.json();
+            applyTranslations();
+            localStorage.setItem('selectedLanguage', lang);
+        } catch (error) {
+            console.error('Error loading translations:', error);
+        }
+    }
+
+    // Function to apply translations
+    function applyTranslations() {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                element.textContent = translations[key];
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (translations[key]) {
+                element.placeholder = translations[key];
+            }
+        });
+    }
+
+    // Set initial language
+    const initialLang = localStorage.getItem('selectedLanguage') || 'pt';
+    loadTranslations(initialLang);
+
+    // Language toggle button event
+    languageToggleButton.addEventListener('click', () => {
+        languageOptionsDiv.classList.toggle('hidden');
+    });
+
+    // Language option buttons event
+    langOptionButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const lang = event.target.dataset.lang;
+            loadTranslations(lang);
+            languageOptionsDiv.classList.add('hidden'); // Hide options after selection
+        });
+    });
+
+    // Hide language options if clicked outside
+    window.addEventListener('click', (event) => {
+        if (!languageOptionsDiv.contains(event.target) && !languageToggleButton.contains(event.target)) {
+            languageOptionsDiv.classList.add('hidden');
+        }
+    });
+
     let currentUserEmail = '';
     let inboxInterval;
     const socket = io();
@@ -59,14 +118,45 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(registerForm);
-        const response = await fetch('/register', {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        });
-        const result = await response.text();
-        alert(result);
-        if (response.ok) {
-            showLoginLink.click(); // Volta para a tela de login
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm_password');
+        const email = formData.get('email');
+
+        if (!email || !password || !confirmPassword) {
+            alert(translations.fill_all_fields);
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert(translations.passwords_do_not_match);
+            return;
+        }
+
+        if (!email.endsWith("@cypmail.com")) {
+            alert(translations.email_must_be_cypmail);
+            return;
+        }
+
+        if (password.length < 8) {
+            alert(translations.password_min_length);
+            return;
+        }
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
+            const result = await response.text();
+            if (response.ok) {
+                alert(translations.registration_success);
+                showLoginLink.click(); // Volta para a tela de login
+            } else {
+                alert(`${translations.registration_error_prefix} ${result}`);
+            }
+        } catch (error) {
+            console.error('Registration connection error:', error);
+            alert(translations.connection_error);
         }
     });
 
@@ -74,17 +164,22 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(loginForm);
-        const response = await fetch('/login', {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        });
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
 
-        if (response.ok) {
-            const email = formData.get('email');
-            window.location.href = `/user/${encodeURIComponent(email)}`; // Redireciona para a nova rota
-        } else {
-            const error = await response.text();
-            alert(error);
+            if (response.ok) {
+                const email = formData.get('email');
+                window.location.href = `/user/${encodeURIComponent(email)}`; // Redireciona para a nova rota
+            } else {
+                const error = await response.text();
+                alert(`${translations.login_error_prefix} ${error}`);
+            }
+        } catch (error) {
+            console.error('Login connection error:', error);
+            alert(translations.connection_error);
         }
     });
 
@@ -110,9 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lidar com o envio do formulário de composição
     composeForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const to = document.getElementById('to').value;
-        const subject = document.getElementById('subject').value;
-        const body = document.getElementById('body').value;
+        const to = document.getElementById('compose-to').value;
+        const subject = document.getElementById('compose-subject').value;
+        const body = document.getElementById('compose-body').value;
 
         socket.emit('send_email', {
             to,
@@ -141,25 +236,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const emails = await response.json();
                 emailListDiv.innerHTML = ''; // Limpa a lista atual
                 if (emails.length === 0) {
-                    emailListDiv.innerHTML = '<p>Nenhum email na caixa de entrada.</p>';
+                    emailListDiv.innerHTML = `<p>${translations.inbox_empty}</p>`;
                 } else {
                     emails.forEach(email => {
                         const emailItem = document.createElement('div');
                         emailItem.classList.add('email-item');
                         emailItem.innerHTML = `
-                            <div><strong>De:</strong> ${email.from}</div>
-                            <div><strong>Assunto:</strong> ${email.subject}</div>
+                            <div><strong>${translations.from_prefix}</strong> ${email.from}</div>
+                            <div><strong>${translations.subject_prefix}</strong> ${email.subject}</div>
                         `;
                         emailListDiv.appendChild(emailItem);
                     });
                 }
             } else {
                 console.error('Erro ao carregar emails:', response.statusText);
-                emailListDiv.innerHTML = '<p>Erro ao carregar emails.</p>';
+                emailListDiv.innerHTML = `<p>${translations.error_loading_emails}</p>`;
             }
         } catch (error) {
             console.error('Erro de rede ao carregar emails:', error);
-            emailListDiv.innerHTML = '<p>Erro de rede ao carregar emails.</p>';
+            emailListDiv.innerHTML = `<p>${translations.connection_error_loading_emails}</p>`;
         }
     }
 });

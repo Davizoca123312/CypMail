@@ -1,0 +1,22 @@
+{
+    "login_title": "CypMail - Iniciar Sesión",
+    "welcome_message": "Bienvenido a CypMail",
+    "email_label": "Correo electrónico:",
+    "password_label": "Contraseña:",
+    "login_button": "Iniciar Sesión",
+    "no_account_prompt": "¿No tienes una cuenta? Regístrate",
+    "register_modal_title": "Registrarse",
+    "confirm_password_label": "Confirmar Contraseña:",
+    "register_button": "Registrar",
+    "registration_error_prefix": "Error de registro:",
+    "login_error_prefix": "Error de inicio de sesión:",
+    "fill_all_fields": "Por favor, complete todos los campos.",
+    "passwords_do_not_match": "Las contraseñas no coinciden.",
+    "email_must_be_cypmail": "El correo electrónico debe ser @cypmail.com",
+    "password_min_length": "La contraseña debe tener al menos 8 caracteres.",
+    "registration_success": "¡Registro exitoso! Por favor, inicie sesión.",
+    "registration_error": "Error en el registro.",
+    "invalid_credentials": "Correo electrónico o contraseña inválidos.",
+    "login_error": "Error de inicio de sesión.",
+    "connection_error": "Error de conexión."
+}

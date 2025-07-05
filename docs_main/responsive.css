@@ -1,0 +1,35 @@
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .inbox-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inbox-controls button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-section input[type="file"] {
+        width: 100%;
+    }
+
+    .profile-section button {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+}

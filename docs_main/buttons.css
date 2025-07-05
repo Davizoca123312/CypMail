@@ -1,0 +1,95 @@
+.profile-section button {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.light-mode .profile-section button {
+    background-color: var(--button-primary-bg-light);
+}
+
+.light-mode .profile-section button:hover {
+    background-color: var(--button-primary-hover-light);
+}
+
+.dark-mode .profile-section button {
+    background-color: var(--button-primary-bg-dark);
+}
+
+.dark-mode .profile-section button:hover {
+    background-color: var(--button-primary-hover-dark);
+}
+
+/* Estilos específicos para o botão Mudar Foto de Perfil */
+#changeProfilePicButton {
+    margin-left: auto; /* Empurra o botão para a direita */
+    background-color: #6c757d !important; /* Cor neutra */
+}
+
+#changeProfilePicButton:hover {
+    background-color: #5a6268 !important;
+}
+
+.inbox-controls button {
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.light-mode .inbox-controls button {
+    background-color: var(--button-success-bg-light);
+}
+
+.light-mode .inbox-controls button:hover {
+    background-color: var(--button-success-hover-light);
+}
+
+.dark-mode .inbox-controls button {
+    background-color: var(--button-success-bg-dark);
+}
+
+.dark-mode .inbox-controls button:hover {
+    background-color: var(--button-success-hover-dark);
+}
+
+#themeToggleButton {
+    background-color: #6c757d !important; /* Cor neutra para o botão de tema */
+}
+
+#themeToggleButton:hover {
+    background-color: #5a6268 !important;
+}
+
+.delete-email-button {
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.light-mode .delete-email-button {
+    background-color: var(--delete-button-bg-light);
+}
+
+.light-mode .delete-email-button:hover {
+    background-color: var(--delete-button-hover-light);
+}
+
+.dark-mode .delete-email-button {
+    background-color: var(--delete-button-bg-dark);
+}
+
+.dark-mode .delete-email-button:hover {
+    background-color: var(--delete-button-hover-dark);
+}
